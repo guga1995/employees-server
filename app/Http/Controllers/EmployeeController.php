@@ -24,9 +24,14 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $employees = Employee::query()
-            ->with('company')
-            ->paginate($request->per_page);
+        $query = Employee::query()
+            ->with('company');
+
+        if ($companyIdFilter = $request->input('filter.company_id')) {
+            $query->where('company_id', '=',  $companyIdFilter);
+        }
+
+        $employees = $query->paginate($request->per_page);
 
         return JsonResource::collection($employees);
     }

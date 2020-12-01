@@ -25,7 +25,9 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        $companies = Company::query()->paginate($request->per_page);
+        $companies = Company::query()
+            ->withCount('employees')
+            ->paginate($request->per_page);
 
         return JsonResource::collection($companies);
     }
